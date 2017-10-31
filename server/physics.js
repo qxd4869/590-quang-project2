@@ -7,7 +7,7 @@ const attacks = []; // array of attack to handle
 
 // box collision check between two rectangles
 // of a set width/height
-const checkCollisions = (rect1, rect2, width, height) => {
+/* const checkCollisions = (rect1, rect2, width, height) => {
   if (rect1.x < rect2.x + width &&
      rect1.x + width > rect2.x &&
      rect1.y < rect2.y + height &&
@@ -15,7 +15,7 @@ const checkCollisions = (rect1, rect2, width, height) => {
     return true; // is colliding
   }
   return false; // is not colliding
-};
+}; */
 
 // check attack collisions to see if colliding with the
 // user themselves and return false so users cannot damage
@@ -36,7 +36,6 @@ const checkAttacks = () => {
         const char1 = characters[keys[k]];
 
         // call to see if the attack and character hit
-        const hit = checkAttackCollision(char1, attacks[i]);
 
         if (hit) { // if a hit
           /**
