@@ -46,10 +46,10 @@ const redraw = (time) => {
     //applying a filter effect to other characters
     //in order to see our character easily
     if(square.hash === hash) {
-      ctx.filter = "none"
+      ctx.fillStyle = "red"
     }
     else {
-      ctx.filter = "hue-rotate(40deg)";
+      ctx.fillStyle = "blue";
     }
 
     //calculate lerp of the x/y from the destinations

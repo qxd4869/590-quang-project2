@@ -55,19 +55,7 @@ const setUser = (data) => {
 
 //when a character is killed
 const playerDeath = (data) => {
-  //remove the character
-  delete squares[data];
- 
-  //if the character killed is our character
-  //then disconnect and draw a game over screen
-  if(data === hash) {
-    socket.disconnect();
-    cancelAnimationFrame(animationFrame);
-    ctx.fillRect(0, 0, 500, 500);
-    ctx.fillStyle = 'white';
-    ctx.font = '48px serif';
-    ctx.fillText('You died', 50, 100);
-  }
+  console.log("lololol");
 };
 
 //update this user's positions based on keyboard input

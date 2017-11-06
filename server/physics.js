@@ -7,7 +7,7 @@ const attacks = []; // array of attack to handle
 
 // box collision check between two rectangles
 // of a set width/height
-/* const checkCollisions = (rect1, rect2, width, height) => {
+const checkCollisions = (rect1, rect2, width, height) => {
   if (rect1.x < rect2.x + width &&
      rect1.x + width > rect2.x &&
      rect1.y < rect2.y + height &&
@@ -15,58 +15,67 @@ const attacks = []; // array of attack to handle
     return true; // is colliding
   }
   return false; // is not colliding
-}; */
+}; 
 
 // check attack collisions to see if colliding with the
 // user themselves and return false so users cannot damage
 // themselves
 
 // handle each attack and calculate collisions
-const checkAttacks = () => {
+const checkCrash = () => {
   // if we have attack
-  if (attacks.length > 0) {
     // get all characters
     const keys = Object.keys(charList);
     const characters = charList;
+ 
+    for (let j = 0; j < keys.length; j++) {
+      const char1 = characters[keys[j]];
+      for (let k = j +1; k < keys.length; k++) {
+         const char2 = characters[keys[k]];
+         const hit = checkCollisions(char1, char2, 61, 121);
+     
+         if(hit){
+           let data;
+           data.first = char1;
+           data.second = char2;
+           process.send(new Message('crashCollision', data));
+         }
+         else {
+                  
+         }
+      } 
+    } 
+};
 
-    // for each attack
-    for (let i = 0; i < attacks.length; i++) {
-      // for each character
-      for (let k = 0; k < keys.length; k++) {
-        const char1 = characters[keys[k]];
-
-        // call to see if the attack and character hit
-
-        if (hit) { // if a hit
-          /**
-            Since this is a separate process we can only communicate
-            via messages. Having this process send a message back
-            to the other process means the other process has a 
-            process.on listener for messages. 
-          **/
-          //send an 'attackHit' message back to the main process
-          //along with the character that is being hit
-          process.send(new Message('attackHit', char1.hash));
-          // kill that character and remove from our us er list
-          delete charList[char1.hash];
-        } else {
-          // if not a hit
-          console.log('miss');
-        }
-      }
-
-      // once the attack has been calculated again all users
-      // remove this attack and move onto the next one
-      attacks.splice(i);
-      // decrease i since our splice changes the array length
-      i--;
+const crashHelper = (character) => {
+  switch(character.direction)
+  {
+    case directions.DOWN: {
+      character.speedY = -4;
+      break;
+    }
+    // if left, set the height/width of attack to face left
+    // and offset attack left from user
+    case directions.LEFT: {
+      character.speedX = 1;
+      break;
+    }
+    // if right, set the height/width of attack to face right
+    // and offset attack right from user
+    case directions.RIGHT: {
+      break;
+    }
+    // if up, set the height/width of attack to face up
+    // and offset attack upward from user
+    case directions.UP: {
+      break;
     }
   }
-};
+} 
 
 // check for collisions every 20ms
 setInterval(() => {
-  checkAttacks();
+  checkCrash();
 }, 20);
 
 //listen for messages from the main process

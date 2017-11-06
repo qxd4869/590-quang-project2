@@ -48,9 +48,9 @@ var redraw = function redraw(time) {
     //applying a filter effect to other characters
     //in order to see our character easily
     if (square.hash === hash) {
-      ctx.filter = "none";
+      ctx.fillStyle = "red";
     } else {
-      ctx.filter = "hue-rotate(40deg)";
+      ctx.fillStyle = "blue";
     }
 
     //calculate lerp of the x/y from the destinations
@@ -144,7 +144,7 @@ var init = function init() {
 };
 
 window.onload = init;
-'use strict';
+"use strict";
 
 //when we receive a character update
 var update = function update(data) {
@@ -203,19 +203,7 @@ var setUser = function setUser(data) {
 
 //when a character is killed
 var playerDeath = function playerDeath(data) {
-  //remove the character
-  delete squares[data];
-
-  //if the character killed is our character
-  //then disconnect and draw a game over screen
-  if (data === hash) {
-    socket.disconnect();
-    cancelAnimationFrame(animationFrame);
-    ctx.fillRect(0, 0, 500, 500);
-    ctx.fillStyle = 'white';
-    ctx.font = '48px serif';
-    ctx.fillText('You died', 50, 100);
-  }
+  console.log("lololol");
 };
 
 //update this user's positions based on keyboard input
