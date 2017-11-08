@@ -4,6 +4,16 @@ const Message = require('./messages/Message.js');
 
 let charList = {}; // list of characters
 const attacks = []; // array of attack to handle
+const directions = {
+  DOWNLEFT: 0,
+  DOWN: 1,
+  DOWNRIGHT: 2,
+  LEFT: 3,
+  UPLEFT: 4,
+  RIGHT: 5,
+  UPRIGHT: 6,
+  UP: 7,
+};
 
 // box collision check between two rectangles
 // of a set width/height
@@ -27,50 +37,90 @@ const checkCrash = () => {
     // get all characters
     const keys = Object.keys(charList);
     const characters = charList;
- 
-    for (let j = 0; j < keys.length; j++) {
-      const char1 = characters[keys[j]];
-      for (let k = j +1; k < keys.length; k++) {
-         const char2 = characters[keys[k]];
-         const hit = checkCollisions(char1, char2, 61, 121);
+  
+  
+    for (let i = 0; i < keys.length; i++) {
      
+    }
+    
+
+    for (let i = 0; i < keys.length; i++) {
+      let speedX = characters[keys[i]].speedX;
+      let speedY = characters[keys[i]].speedY;    
+      if(speedX < 0){
+        characters[keys[i]].speedX += 0.2;
+        console.log(characters[keys[i]].speedX );
+      } 
+      if(speedX > 0){
+        characters[keys[i]].speedX -= 0.2;
+      } 
+      if(speedY < 0){
+        characters[keys[i]].speedY += 0.2;
+      }
+      if(speedY > 0){
+        characters[keys[i]].speedY -= 0.2;
+      }
+         
+      //characters[keys[i]].speedX = characters[keys[i]].speedX * 0.8;
+      //characters[keys[i]].speedY = characters[keys[i]].speedY * 0.6;
+    
+    }  
+  
+    for (let j = 0; j < keys.length; j++) {
+      let char1 = characters[keys[j]];
+      for (let k = j +1; k < keys.length; k++) {
+         let char2 = characters[keys[k]];
+         const hit = checkCollisions(char1, char2, 61, 121);
+      
          if(hit){
-           let data;
-           data.first = char1;
-           data.second = char2;
+              
+           characters[keys[j]].speedX = crashHelper(keys[j]).speedX;
+           characters[keys[j]].speedY = crashHelper(keys[j]).speedY;
+           characters[keys[k]].speedX = crashHelper(keys[k]).speedX;
+           characters[keys[k]].speedY = crashHelper(keys[k]).speedY;
+           
+           let data = {};
+           data.first = characters[keys[j]];
+           data.second = characters[keys[k]];
            process.send(new Message('crashCollision', data));
          }
          else {
-                  
+                   
          }
       } 
-    } 
+   } 
 };
 
-const crashHelper = (character) => {
-  switch(character.direction)
+const crashHelper = (characterHash) =>  {
+  let speedX = 0;
+  let speedY = 0;
+  switch(charList[characterHash].direction)
   {
     case directions.DOWN: {
-      character.speedY = -4;
+      speedY = -2;
       break;
     }
     // if left, set the height/width of attack to face left
     // and offset attack left from user
     case directions.LEFT: {
-      character.speedX = 1;
+      speedX = 2;
       break;
     }
     // if right, set the height/width of attack to face right
     // and offset attack right from user
     case directions.RIGHT: {
+      speedX = -2;
       break;
     }
     // if up, set the height/width of attack to face up
     // and offset attack upward from user
     case directions.UP: {
+      speedY = 2 ;
       break;
     }
   }
+  
+  return {speedX, speedY};
 } 
 
 // check for collisions every 20ms

@@ -55,7 +55,7 @@ const setUser = (data) => {
 
 //when a character is killed
 const playerDeath = (data) => {
-  console.log("lololol");
+ 
 };
 
 //update this user's positions based on keyboard input
@@ -65,7 +65,10 @@ const updatePosition = () => {
   //move the last x/y to our previous x/y variables
   square.prevX = square.x;
   square.prevY = square.y;
-
+  
+  console.log(square.speedX);
+  square.destX += square.speedX;
+  square.destY += square.speedY;
   //if user is moving up, decrease y
   if(square.moveUp && square.destY > 0) {
     square.destY -= 2;

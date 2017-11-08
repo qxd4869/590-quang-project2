@@ -44,11 +44,38 @@ const directions = {
 **/
 const physics = child.fork('./server/physics.js');
 
-
+// when we receive a message object from our physics process
+physics.on('message', (m) => {
+    //since we are using a custom message object with a type
+    //we know we can check the type field to see what type of
+    //message we are receiving
+    switch (m.type) {
+      //if the message type is 'attackHit'
+      case 'attackHit': {
+          //send out the attackHit event to all users along
+          //with the data we received from the physics message
+          io.sockets.in('room1').emit('attackHit', m.data);
+          break;
+      }
+      case 'crashCollision': {
+          charList[m.data.first.hash] = m.data.first;
+          // update the timestamp of the last change for this character
+          charList[m.data.first.hash].lastUpdate = new Date().getTime();
+          charList[m.data.second.hash] = m.data.second;
+          // update the timestamp of the last change for this character
+          charList[m.data.second.hash].lastUpdate = new Date().getTime();
+          break;
+      }
+      //otherwise we will assume we do not recongize the message type
+      default: {
+          console.log('Received unclear type from physics');
+      } 
+    }
+});
 
 //when we receive an error from our physics process
 physics.on('error', (error) => {
-  console.dir(error);
+  //console.dir(error);
 });
 
 //when our physics process closes - meaning the process exited
@@ -111,34 +138,7 @@ const setupSockets = (ioServer) => {
       // update our physics simulation with the character's updates
       physics.send(new Message('charList', charList));
       
-      // when we receive a message object from our physics process
-      physics.on('message', (m) => {
-        //since we are using a custom message object with a type
-        //we know we can check the type field to see what type of
-        //message we are receiving
-        switch (m.type) {
-          //if the message type is 'attackHit'
-          case 'attackHit': {
-            //send out the attackHit event to all users along
-            //with the data we received from the physics message
-            io.sockets.in('room1').emit('attackHit', m.data);
-            break;
-          }
-          case 'crashCollision': {
-            charList[m.data.first.hash] = m.data.first;
-            // update the timestamp of the last change for this character
-            charList[m.data.first.hash].lastUpdate = new Date().getTime();
-            charList[m.data.second.hash] = m.data.second;
-            // update the timestamp of the last change for this character
-            charList[m.data.second.hash].lastUpdate = new Date().getTime();
-            break;
-          }
-          //otherwise we will assume we do not recongize the message type
-          default: {
-            console.log('Received unclear type from physics');
-          } 
-        }
-      });
+
 
       // notify everyone of the user's updated movement
       io.sockets.in('room1').emit('updatedMovement', charList[socket.hash]);
@@ -203,7 +203,7 @@ const setupSockets = (ioServer) => {
         
         // add the attack to our physics calculations
         physics.send(new Message('attack', attack));
-      }
+      } 
     });
 
     // when the user disconnects

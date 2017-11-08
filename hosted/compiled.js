@@ -144,7 +144,7 @@ var init = function init() {
 };
 
 window.onload = init;
-"use strict";
+'use strict';
 
 //when we receive a character update
 var update = function update(data) {
@@ -202,9 +202,7 @@ var setUser = function setUser(data) {
 
 
 //when a character is killed
-var playerDeath = function playerDeath(data) {
-  console.log("lololol");
-};
+var playerDeath = function playerDeath(data) {};
 
 //update this user's positions based on keyboard input
 var updatePosition = function updatePosition() {
@@ -214,6 +212,9 @@ var updatePosition = function updatePosition() {
   square.prevX = square.x;
   square.prevY = square.y;
 
+  console.log(square.speedX);
+  square.destX += square.speedX;
+  square.destY += square.speedY;
   //if user is moving up, decrease y
   if (square.moveUp && square.destY > 0) {
     square.destY -= 2;
