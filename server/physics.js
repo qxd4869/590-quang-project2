@@ -38,32 +38,33 @@ const checkCrash = () => {
     const keys = Object.keys(charList);
     const characters = charList;
   
-  
+    let data = {};
     for (let i = 0; i < keys.length; i++) {
-     
+    // console.log(`Object ${i} with speed ` +characters[keys[i]].speedX);
     }
     
-
     for (let i = 0; i < keys.length; i++) {
       let speedX = characters[keys[i]].speedX;
       let speedY = characters[keys[i]].speedY;    
       if(speedX < 0){
-        characters[keys[i]].speedX += 0.2;
-        console.log(characters[keys[i]].speedX );
+        characters[keys[i]].speedX += 0.02;
+        //console.log(`Object ${i} with speed ` +characters[keys[i]].speedX)
       } 
       if(speedX > 0){
-        characters[keys[i]].speedX -= 0.2;
+        characters[keys[i]].speedX -= 0.02;
       } 
       if(speedY < 0){
-        characters[keys[i]].speedY += 0.2;
+        characters[keys[i]].speedY += 0.02;
       }
       if(speedY > 0){
-        characters[keys[i]].speedY -= 0.2;
+        characters[keys[i]].speedY -= 0.02;
       }
-         
-      //characters[keys[i]].speedX = characters[keys[i]].speedX * 0.8;
-      //characters[keys[i]].speedY = characters[keys[i]].speedY * 0.6;
-    
+     
+     data.hash = characters[keys[i]].hash;
+     data.speedX =  characters[keys[i]].speedX;
+     data.speedY =  characters[keys[i]].speedY;
+     process.send(new Message('speedUpdate', data));
+      
     }  
   
     for (let j = 0; j < keys.length; j++) {
@@ -79,13 +80,11 @@ const checkCrash = () => {
            characters[keys[k]].speedX = crashHelper(keys[k]).speedX;
            characters[keys[k]].speedY = crashHelper(keys[k]).speedY;
            
-           let data = {};
+           data = {};
            data.first = characters[keys[j]];
            data.second = characters[keys[k]];
            process.send(new Message('crashCollision', data));
-         }
-         else {
-                   
+           
          }
       } 
    } 
@@ -97,25 +96,25 @@ const crashHelper = (characterHash) =>  {
   switch(charList[characterHash].direction)
   {
     case directions.DOWN: {
-      speedY = -2;
+      speedY = -4;
       break;
     }
     // if left, set the height/width of attack to face left
     // and offset attack left from user
     case directions.LEFT: {
-      speedX = 2;
+      speedX = 4;
       break;
     }
     // if right, set the height/width of attack to face right
     // and offset attack right from user
     case directions.RIGHT: {
-      speedX = -2;
+      speedX = -4;
       break;
     }
     // if up, set the height/width of attack to face up
     // and offset attack upward from user
     case directions.UP: {
-      speedY = 2 ;
+      speedY = 4;
       break;
     }
   }
@@ -151,12 +150,6 @@ process.on('message', (messageObject) => {
       //update a specific character with the character provided
       const character = messageObject.data;
       charList[character.hash] = character;
-      break;
-    }
-    //if message type is attack
-    case 'attack': {
-      //add our attack object from the message
-      attacks.push(messageObject.data);
       break;
     }
     //otherwise default

@@ -57,8 +57,16 @@ physics.on('message', (m) => {
           io.sockets.in('room1').emit('attackHit', m.data);
           break;
       }
+      case 'speedUpdate': {
+          //send out the attackHit event to all users along
+          //with the data we received from the physics message
+          charList[m.data.hash].speedX = m.data.speedX;
+          charList[m.data.hash].speedY = m.data.speedY;
+          break;
+      }
       case 'crashCollision': {
           charList[m.data.first.hash] = m.data.first;
+          //console.log(m.data.first.speedX);
           // update the timestamp of the last change for this character
           charList[m.data.first.hash].lastUpdate = new Date().getTime();
           charList[m.data.second.hash] = m.data.second;
@@ -130,81 +138,35 @@ const setupSockets = (ioServer) => {
     socket.on('movementUpdate', (data) => {
       // update the user's info
       // NOTICE: THIS IS NOT VALIDED AND IS UNSAFE
-
-      charList[socket.hash] = data;
+      
+      //const{speedX, speedY, ...others} = data;
+ 
+  
+      charList[socket.hash].x = data.x;
+      charList[socket.hash].y = data.y; 
+      charList[socket.hash].prevX = data.prevX; 
+      charList[socket.hash].prevY = data.prevY; 
+      charList[socket.hash].destX = data.destX; 
+      charList[socket.hash].destY = data.destY;
+      charList[socket.hash].direction = data.direction;
+      charList[socket.hash].moveLeft = data.moveLeft; 
+      charList[socket.hash].moveUp = data.moveUp; 
+      charList[socket.hash].moveDown = data.moveDown; 
+      charList[socket.hash].moveRight = data.moveRight; 
+      
       // update the timestamp of the last change for this character
       charList[socket.hash].lastUpdate = new Date().getTime();
       
+      //console.log(charList[socket.hash]);
       // update our physics simulation with the character's updates
       physics.send(new Message('charList', charList));
       
 
-
+      //console.dir(charList[socket.hash]);
       // notify everyone of the user's updated movement
       io.sockets.in('room1').emit('updatedMovement', charList[socket.hash]);
     });
 
-    // when this user sends an attack request
-    socket.on('attack', (data) => {
-      const attack = data;
-
-      // should we handle the attack
-      // I only did this because I did not code
-      // for all player directions.
-      let handleAttack = true;
-
-      // which direction is the user attacking in
-      // will be an integer from our directions structure
-      switch (attack.direction) {
-        // if down, set the height/width of attack to face down
-        // and offset attack downward from user
-        case directions.DOWN: {
-          attack.width = 66;
-          attack.height = 183;
-          attack.y = attack.y + 121;
-          break;
-        }
-        // if left, set the height/width of attack to face left
-        // and offset attack left from user
-        case directions.LEFT: {
-          attack.width = 183;
-          attack.height = 66;
-          attack.x = attack.x - 183;
-          break;
-        }
-        // if right, set the height/width of attack to face right
-        // and offset attack right from user
-        case directions.RIGHT: {
-          attack.width = 183;
-          attack.height = 66;
-          attack.x = attack.x + 61;
-          break;
-        }
-        // if up, set the height/width of attack to face up
-        // and offset attack upward from user
-        case directions.UP: {
-          attack.width = 66;
-          attack.height = 183;
-          attack.y = attack.y - 183;
-          break;
-        }
-        // any other direction we will not handle
-        default: {
-          handleAttack = false;
-        }
-      }
-
-      // if handling the attack
-      if (handleAttack) {
-        // send the graphical update to everyone
-        // This will NOT perform the collision or character death
-        // This just updates graphics so people see the attack
-        io.sockets.in('room1').emit('attackUpdate', attack);
-        
-        // add the attack to our physics calculations
-        physics.send(new Message('attack', attack));
-      } 
-    });
 
     // when the user disconnects
     socket.on('disconnect', () => {

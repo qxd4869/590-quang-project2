@@ -180,6 +180,8 @@ var update = function update(data) {
   square.moveDown = data.moveDown;
   square.moveUp = data.moveUp;
   square.alpha = 0.05;
+  square.speedX = data.speedX;
+  square.speedY = data.speedY;
 };
 
 //function to remove a character from our character list
@@ -212,9 +214,6 @@ var updatePosition = function updatePosition() {
   square.prevX = square.x;
   square.prevY = square.y;
 
-  console.log(square.speedX);
-  square.destX += square.speedX;
-  square.destY += square.speedY;
   //if user is moving up, decrease y
   if (square.moveUp && square.destY > 0) {
     square.destY -= 2;
@@ -231,6 +230,8 @@ var updatePosition = function updatePosition() {
   if (square.moveRight && square.destX < 400) {
     square.destX += 2;
   }
+  square.destX += square.speedX;
+  square.destY += square.speedY;
 
   //determine direction based on the inputs of direction keys
   if (square.moveUp && square.moveLeft) square.direction = directions.UPLEFT;

@@ -18,7 +18,6 @@ class Character {
     this.moveRight = false;
     this.moveDown = false;
     this.moveUp = false;
-    this.collide = false;
     this.speedX = 0;
     this.speedY = 0;
   }
