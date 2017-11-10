@@ -37,7 +37,7 @@ const redraw = (time) => {
   const keys = Object.keys(squares);
 
   //for each user
-  for(let i = 0; i < keys.length; i++) {
+  for(let i = 0; i < keys.length; i++){
 
     const square = squares[keys[i]];
 

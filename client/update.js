@@ -75,8 +75,6 @@ const updatePosition = () => {
   square.prevY = square.y;
   
 
-  
-  
   //if user is moving up, decrease y
   if(square.moveUp && square.destY > 0 && square.speedY < 1) {
     square.destY -= 2;
@@ -94,8 +92,6 @@ const updatePosition = () => {
     square.destX += 2;
   }
   
-  //if(square.destX < 400 && square.destX > 0)   square.destX += square.speedX;
-  //if(square.destY < 400 && square.destY > 0)   square.destY += square.speedY;
 
   square.destX += square.speedX;
   square.destY += square.speedY;

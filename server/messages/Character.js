@@ -1,7 +1,7 @@
 class Character {
- 
+
   constructor(hash) {
-    let a = Math.floor(Math.random() * 400);
+    const a = Math.floor(Math.random() * 400);
     this.hash = hash;
     this.lastUpdate = new Date().getTime();
     this.x = a;
