@@ -10,8 +10,8 @@ class Character {
     this.prevY = a;
     this.destX = a;
     this.destY = a;
-    this.height = 100;
-    this.width = 100;
+    this.height = 50;
+    this.width = 50;
     this.alpha = 0;
     this.direction = 0;
     this.frame = 0;
