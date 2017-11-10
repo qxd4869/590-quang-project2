@@ -9,13 +9,14 @@ const directions = {
   UPLEFT: 4,
   RIGHT: 5, 
   UPRIGHT: 6,
-  UP: 7
+  UP: 7,
+  NONE: 8,
 };
 
 //size of our character sprites
 const spriteSizes = {
-  WIDTH: 61,
-  HEIGHT: 121
+  WIDTH: 50,
+  HEIGHT: 50,
 };
 
 //function to lerp (linear interpolation)

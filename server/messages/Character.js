@@ -1,13 +1,15 @@
 class Character {
+ 
   constructor(hash) {
+    let a = Math.floor(Math.random() * 400);
     this.hash = hash;
     this.lastUpdate = new Date().getTime();
-    this.x = 0;
-    this.y = 0;
-    this.prevX = 0;
-    this.prevY = 0;
-    this.destX = 0;
-    this.destY = 0;
+    this.x = a;
+    this.y = a;
+    this.prevX = a;
+    this.prevY = a;
+    this.destX = a;
+    this.destY = a;
     this.height = 100;
     this.width = 100;
     this.alpha = 0;

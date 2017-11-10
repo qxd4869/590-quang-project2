@@ -58,10 +58,12 @@ physics.on('message', (m) => {
           break;
       }
       case 'speedUpdate': {
-          //send out the attackHit event to all users along
-          //with the data we received from the physics message
-          charList[m.data.hash].speedX = m.data.speedX;
-          charList[m.data.hash].speedY = m.data.speedY;
+          if(charList[m.data.hash]){
+            //send out the attackHit event to all users along
+            //with the data we received from the physics message
+            charList[m.data.hash].speedX = m.data.speedX;
+            charList[m.data.hash].speedY = m.data.speedY;
+          }
           break;
       }
       case 'crashCollision': {
@@ -111,7 +113,7 @@ physics.on('exit', (code, signal) => {
 physics.send(new Message('charList', charList));
 
 // function to setup our socket server
-const setupSockets = (ioServer) => {
+const setupSockets = (ioServer) =>  {
   // set our io server instance
   io = ioServer;
 
@@ -161,8 +163,7 @@ const setupSockets = (ioServer) => {
       // update our physics simulation with the character's updates
       physics.send(new Message('charList', charList));
       
-
-      //console.dir(charList[socket.hash]);
+      
       // notify everyone of the user's updated movement
       io.sockets.in('room1').emit('updatedMovement', charList[socket.hash]);
     });
