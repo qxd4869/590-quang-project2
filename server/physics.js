@@ -219,11 +219,10 @@ const crashHelper = (firstHash, secondHash) =>  {
           break;
         }
         default:
-          break;
+ 
       }
     }
     default:
-    break;
   }
   
   return {firstX, firstY, secondX, secondY};
