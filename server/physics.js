@@ -122,11 +122,12 @@ const crashHelper = (firstHash, secondHash) =>  {
           break;
         }
         default:
-          break;
+         
       }
     }
+    break;
     default:
-      break;
+
   }
   
   switch(charList[secondHash].direction)
@@ -222,6 +223,7 @@ const crashHelper = (firstHash, secondHash) =>  {
  
       }
     }
+    break;
     default:
   }
   
