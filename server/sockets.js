@@ -15,20 +15,6 @@ const charList = {};
 //socketio server instance
 let io;
 
-// Possible directions a user can move
-// their character. These are mapped
-// to integers for fast/small storage
-const directions = {
-  DOWNLEFT: 0,
-  DOWN: 1,
-  DOWNRIGHT: 2,
-  LEFT: 3,
-  UPLEFT: 4,
-  RIGHT: 5,
-  UPRIGHT: 6,
-  UP: 7,
-};
-
 // start a child process for our custom physics file 
 // This will kick off a process of that file and execute it
 // as a separate node process. When it completes it will call
@@ -85,7 +71,7 @@ physics.on('message', (m) => {
 
 //when we receive an error from our physics process
 physics.on('error', (error) => {
-  //console.dir(error);
+  console.dir(error);
 });
 
 //when our physics process closes - meaning the process exited

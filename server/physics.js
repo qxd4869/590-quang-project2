@@ -3,7 +3,6 @@
 const Message = require('./messages/Message.js');
 
 let charList = {}; // list of characters
-const attacks = []; // array of attack to handle
 const directions = {
   DOWNLEFT: 0,
   DOWN: 1,
@@ -26,71 +25,6 @@ const checkCollisions = (rect1, rect2, width, height) => {
     return true; // is colliding
   }
   return false; // is not colliding
-}; 
-
-// check attack collisions to see if colliding with the
-// user themselves and return false so users cannot damage
-// themselves
-
-// handle each attack and calculate collisions
-const checkCrash = () => {
-  // if we have attack
-    // get all characters
-    const keys = Object.keys(charList);
-    const characters = charList;
-  
-    let data = {};
-    for (let i = 0; i < keys.length; i++) {
-    // console.log(`Object ${i} with speed ` +characters[keys[i]].speedX);
-    }
-    
-    for (let i = 0; i < keys.length; i++) {
-      let speedX = characters[keys[i]].speedX;
-      let speedY = characters[keys[i]].speedY;    
-      if(speedX < 0){
-        characters[keys[i]].speedX += 0.02;
-        //console.log(`Object ${i} with speed ` +characters[keys[i]].speedX)
-      } 
-      if(speedX > 0){
-        characters[keys[i]].speedX -= 0.02;
-      } 
-      if(speedY < 0){
-        characters[keys[i]].speedY += 0.02;
-      }
-      if(speedY > 0){
-        characters[keys[i]].speedY -= 0.02;
-      }
-     
-     data.hash = characters[keys[i]].hash;
-     data.speedX =  characters[keys[i]].speedX;
-     data.speedY =  characters[keys[i]].speedY;
-     //console.log(characters[keys[i]].speedX);
-     process.send(new Message('speedUpdate', data));
-      
-    }  
-  
-    for (let j = 0; j < keys.length; j++) {
-      let char1 = characters[keys[j]];
-      for (let k = j +1; k < keys.length; k++) {
-         let char2 = characters[keys[k]];
-         const hit = checkCollisions(char1, char2, 50, 50);
-      
-         if(hit){
-            
-           let result = crashHelper(keys[j], keys[k]);
-           characters[keys[j]].speedX = result.firstX;
-           characters[keys[j]].speedY = result.firstY;
-           characters[keys[k]].speedX = result.secondX;
-           characters[keys[k]].speedY = result.secondY;
-           
-           data = {};
-           data.first = characters[keys[j]];
-           data.second = characters[keys[k]];
-           process.send(new Message('crashCollision', data));
-           
-         }
-      } 
-   } 
 };
 
 const crashHelper = (firstHash, secondHash) =>  {
@@ -285,7 +219,74 @@ const crashHelper = (firstHash, secondHash) =>  {
   }
   
   return {firstX, firstY, secondX, secondY};
-} 
+}
+
+// check attack collisions to see if colliding with the
+// user themselves and return false so users cannot damage
+// themselves
+
+// handle each attack and calculate collisions
+const checkCrash = () => {
+  // if we have attack
+    // get all characters
+    const keys = Object.keys(charList);
+    const characters = charList;
+  
+    let data = {};
+    for (let i = 0; i < keys.length; i++) {
+    // console.log(`Object ${i} with speed ` +characters[keys[i]].speedX);
+    }
+    
+    for (let i = 0; i < keys.length; i++) {
+      let speedX = characters[keys[i]].speedX;
+      let speedY = characters[keys[i]].speedY;    
+      if(speedX < 0){
+        characters[keys[i]].speedX += 0.02;
+        //console.log(`Object ${i} with speed ` +characters[keys[i]].speedX)
+      } 
+      if(speedX > 0){
+        characters[keys[i]].speedX -= 0.02;
+      } 
+      if(speedY < 0){
+        characters[keys[i]].speedY += 0.02;
+      }
+      if(speedY > 0){
+        characters[keys[i]].speedY -= 0.02;
+      }
+     
+     data.hash = characters[keys[i]].hash;
+     data.speedX =  characters[keys[i]].speedX;
+     data.speedY =  characters[keys[i]].speedY;
+     //console.log(characters[keys[i]].speedX);
+     process.send(new Message('speedUpdate', data));
+      
+    }  
+  
+    for (let j = 0; j < keys.length; j++) {
+      let char1 = characters[keys[j]];
+      for (let k = j +1; k < keys.length; k++) {
+         let char2 = characters[keys[k]];
+         const hit = checkCollisions(char1, char2, 50, 50);
+      
+         if(hit){
+            
+           let result = crashHelper(keys[j], keys[k]);
+           characters[keys[j]].speedX = result.firstX;
+           characters[keys[j]].speedY = result.firstY;
+           characters[keys[k]].speedX = result.secondX;
+           characters[keys[k]].speedY = result.secondY;
+           
+           data = {};
+           data.first = characters[keys[j]];
+           data.second = characters[keys[k]];
+           process.send(new Message('crashCollision', data));
+           
+         }
+      } 
+   } 
+};
+
+ 
 
 // check for collisions every 20ms
 setInterval(() => {
